@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Color Green = Color{38, 185, 154, 255}; // Not using Transparency so alpha is 255
+Color Green = Color{38, 185, 154, 255}; 
 Color DarkGreen = Color{20, 160, 133, 255};
 Color LightGreen = Color{129, 204, 184, 255};
 Color yellow = Color{243, 213, 91, 255};
@@ -55,7 +55,7 @@ public:
                 speed_x *= -1;
                 Reset();
                 resetDone = true;
-                delayTimer = 1.0f; // start delay timer
+                delayTimer = 1.0f; 
             }
             if (x - radius <= 0) // PlayerWins
             {
@@ -63,7 +63,7 @@ public:
                 speed_x *= -1;
                 Reset();
                 resetDone = true;
-                delayTimer = 1.0f; // start delay timer
+                delayTimer = 1.0f; 
             }
         }
     }
@@ -106,11 +106,11 @@ public:
     {
         if (IsKeyDown(KEY_UP))
         {
-            y -= speed; // To move the paddle up
+            y -= speed; 
         }
         if (IsKeyDown(KEY_DOWN))
         {
-            y += speed; // To move the paddle down
+            y += speed; 
         }
 
         LimitMovement();
@@ -119,11 +119,11 @@ public:
     {
         if (IsKeyDown(KEY_W))
         {
-            y -= speed; // To move the paddle up
+            y -= speed; 
         }
         if (IsKeyDown(KEY_S))
         {
-            y += speed; // To move the paddle down
+            y += speed; 
         }
 
         LimitMovement();
@@ -173,25 +173,26 @@ int main()
     player1.y = screenHeight / 2 - player1.height / 2;
     player1.speed = 6;
 
+    player2.width = 25;
+    player2.height = 120;
+    player2.x = 15;
+    player2.y = screenHeight / 2 - player2.height / 2;
+    player2.speed = 6;
+    
     cpu.width = 25;
     cpu.height = 120;
     cpu.x = 15;
     cpu.y = screenHeight / 2 - cpu.height / 2;
     cpu.speed = 6;
 
-    player2.width = 25;
-    player2.height = 120;
-    player2.x = 15;
-    player2.y = screenHeight / 2 - player2.height / 2;
-    player2.speed = 6;
 
     bool gameStarted = false;
-    bool showMenu = true; // flag to indicate if the main menu should be shown
-    float delayTimer = 1.0f; // 1-second delay after pressing space
+    bool showMenu = true; 
+    float delayTimer = 1.0f; 
     bool spacePressed = false;
-    bool cpuGame = false; // flag to indicate if it's a CPU game
-    bool paused = false; // flag to indicate if the game is paused
-    bool showLeaderboard = false; // flag to indicate if the leaderboard should be shown
+    bool cpuGame = false; 
+    bool paused = false; 
+    bool showLeaderboard = false; 
 
     // Load highest score from file
     ifstream file("highest_score.txt");
@@ -261,8 +262,6 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
         {
             ClearBackground(DarkGreen);
 
-            // Animation for "Pong Game" text
-
             DrawText("Pong Game", screenWidth / 2 - 100, screenHeight / 2 - 50, 40, WHITE);
             float textAlpha = (sin(GetTime() * 2) + 1) / 2; // oscillating alpha value
             DrawText("Press space to start", screenWidth / 2 - 120, screenHeight / 2 + 20, 30, Fade(WHITE, textAlpha));
@@ -292,11 +291,12 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
 
             if (paused)
             {
-                DrawRectangle(screenWidth / 2 - 150, screenHeight / 2 - 100, 300, 200, Fade(DarkGreen, 0.5));
-                DrawText("Game Paused", screenWidth / 2 - 120, screenHeight / 2 - 60, 30, WHITE);
-                DrawText("[R]  Resume", screenWidth / 2 - 60, screenHeight / 2 - 20, 30, WHITE);
-                DrawText("[M]  Menu", screenWidth / 2 - 40, screenHeight / 2 + 20, 30, WHITE);
-                DrawText("[Q]  Quit", screenWidth / 2 - 40, screenHeight / 2 + 60, 30, WHITE);
+                DrawRectangle(screenWidth / 2 - 150, screenHeight / 2 - 100, 300, 200, Fade(WHITE, 0.5));
+                float textAlpha = (sin(GetTime() * 2) + 1) / 2; 
+                DrawText("Game Paused", screenWidth / 2 - 120, screenHeight / 2 - 60, 40, Fade(BLACK, textAlpha));
+                DrawText("[R]  Resume", screenWidth / 2 - 40, screenHeight / 2 - 20, 30, BLACK);
+                DrawText("[M]  Menu", screenWidth / 2 - 40, screenHeight / 2 + 20, 30, BLACK);
+                DrawText("[Q]  Quit", screenWidth / 2 - 40, screenHeight / 2 + 60, 30, BLACK);
 
                 if (IsKeyPressed(KEY_R))
                 {
@@ -353,6 +353,7 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
                         file << highestScore;
                         file.close();
                     }
+                    //update last score
                     if (PlayerScore > lastScore)
                     {
                         lastScore = PlayerScore;
@@ -386,7 +387,7 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
                     }
 
                     // Drawing
-                    ClearBackground(DarkGreen); // To fill the window with black color before drawing anything.. So that the previous frame is not visible
+                    ClearBackground(DarkGreen); 
                     DrawRectangle(screenWidth / 2, 0, screenWidth / 2, screenHeight, Green);
                     DrawCircle(screenWidth / 2, screenHeight / 2, 150, LightGreen);
                     DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
@@ -405,6 +406,8 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
                         file << highestScore;
                         file.close();
                     }
+
+                    //update last score
                     if (PlayerScore > lastScore)
                     {
                         lastScore = PlayerScore;
