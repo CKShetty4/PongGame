@@ -2,6 +2,9 @@
 #include <iostream>
 using namespace std;
 
+int PlayerScore = 0;
+int CpuScore = 0;
+
 class Ball
 {
 public:
@@ -23,8 +26,14 @@ public:
         {
             speed_y *= -1;
         }
-        if (x + radius >= GetScreenWidth() || x - radius <= 0)
+        if (x + radius >= GetScreenWidth() )//Computer wins
         {
+            CpuScore++;
+            speed_x *= -1;
+        }
+        if(x - radius <= 0)//PlayerWins
+        {
+            PlayerScore++;
             speed_x *= -1;
         }
     }
@@ -144,6 +153,9 @@ int main()
         ball.Draw();
         cpu.Draw();
         player.Draw();
+
+        DrawText(TextFormat("%i",CpuScore), screenWidth / 4 - 20, 20, 80, WHITE);
+        DrawText(TextFormat("%i",PlayerScore), 3*screenWidth / 4 - 20, 20, 80, WHITE);
         EndDrawing();
     }
 
