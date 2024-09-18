@@ -148,7 +148,7 @@ public:
 Ball ball;
 Paddle player1;
 Paddle player2;
-// CpuPaddle cpu;
+CpuPaddle cpu;
 
 int main()
 {
@@ -170,11 +170,11 @@ int main()
     player1.y = screenHeight / 2 - player1.height / 2;
     player1.speed = 6;
 
-    // cpu.width = 25;
-    // cpu.height = 120;
-    // cpu.x = 15;
-    // cpu.y = screenHeight / 2 - cpu.height / 2;
-    // cpu.speed = 6;
+    cpu.width = 25;
+    cpu.height = 120;
+    cpu.x = 15;
+    cpu.y = screenHeight / 2 - cpu.height / 2;
+    cpu.speed = 6;
 
     player2.width = 25;
     player2.height = 120;
@@ -185,11 +185,37 @@ int main()
     bool gameStarted = false;
     float delayTimer = 1.0f; // 1-second delay after pressing space
     bool spacePressed = false;
+    bool cpuGame = false; // flag to indicate if it's a CPU game
 
-    while (WindowShouldClose() == false)
+    // Menu screen
+    while (!gameStarted)
     {
         BeginDrawing();
-        if (!gameStarted)
+        ClearBackground(DarkGreen);
+
+        DrawText("Pong Game", screenWidth / 2 - 100, screenHeight / 2 - 100, 40, WHITE);
+        DrawText("Select game mode:", screenWidth / 2 - 120, screenHeight / 2 - 60, 30, WHITE);
+        DrawText("1. Player vs Player", screenWidth / 2 - 120, screenHeight / 2 - 20, 30, WHITE);
+        DrawText("2. Player vs CPU", screenWidth / 2 - 120, screenHeight / 2 + 20, 30, WHITE);
+
+        if (IsKeyPressed(KEY_ONE))
+        {
+            cpuGame = false;
+            gameStarted = true;
+        }
+        if (IsKeyPressed(KEY_TWO))
+        {
+            cpuGame = true;
+            gameStarted = true;
+        }
+
+        EndDrawing();
+    }
+
+    while (WindowShouldClose() == false)
+    { 
+        BeginDrawing();
+        if (gameStarted)
         {
             ClearBackground(DarkGreen);
 
@@ -210,19 +236,49 @@ int main()
                 delayTimer -= GetFrameTime();
                 if (delayTimer <= 0.0f)
                 {
-                    gameStarted = true;
+                    gameStarted = false;
                     delayTimer = 0.0f;
                 }
             }
         }
         else
         {
-            // Update and draw the game as usual
+        
+        if (cpuGame)
+        {
+            // CPU game
+            ball.Move();
+            player1.Move();
+            cpu.Move(ball.y);
 
+            // Checking For Collision
+            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player1.x, player1.y, player1.width, player1.height}))
+            {
+                ball.speed_x *= -1;
+            }
+            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x, cpu.y, cpu.width, cpu.height}))
+            {
+                ball.speed_x *= -1;
+            }
+
+            // Drawing
+            ClearBackground(DarkGreen); // To fill the window with black color before drawing anything.. So that the previous frame is not visible
+            DrawRectangle(screenWidth / 2, 0, screenWidth / 2, screenHeight, Green);
+            DrawCircle(screenWidth / 2, screenHeight / 2, 150, LightGreen);
+            DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
+            ball.Draw();
+            cpu.Draw ();
+            player1.Draw();
+
+            DrawText(TextFormat("%i", CpuScore), screenWidth / 4 - 20, 20, 80, WHITE);
+            DrawText(TextFormat("%i", PlayerScore), 3 * screenWidth / 4 - 20, 20, 80, WHITE);
+        }
+        else
+        {
+            // Player vs Player game
             ball.Move();
             player1.Move();
             player2.Move2();
-            // cpu.Move(ball.y);
 
             // Checking For Collision
             if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player1.x, player1.y, player1.width, player1.height}))
@@ -233,10 +289,6 @@ int main()
             {
                 ball.speed_x *= -1;
             }
-            // if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x, cpu.y, cpu.width, cpu.height}))
-            // {
-            //     ball.speed_x *= -1;
-            // }
 
             // Drawing
             ClearBackground(DarkGreen); // To fill the window with black color before drawing anything.. So that the previous frame is not visible
@@ -244,12 +296,12 @@ int main()
             DrawCircle(screenWidth / 2, screenHeight / 2, 150, LightGreen);
             DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
             ball.Draw();
-            // cpu.Draw();
             player2.Draw();
             player1.Draw();
 
             DrawText(TextFormat("%i", CpuScore), screenWidth / 4 - 20, 20, 80, WHITE);
             DrawText(TextFormat("%i", PlayerScore), 3 * screenWidth / 4 - 20, 20, 80, WHITE);
+        }
         }
 
         EndDrawing();
