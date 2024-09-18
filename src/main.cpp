@@ -28,7 +28,41 @@ class Ball{
     }
 };
 
+class Paddle{
+    public:
+    float x,y;
+    int speed;
+    float width, height;
+
+    void Draw(){
+        DrawRectangle(x, y, width, height, WHITE);
+    }
+
+    void Move(){
+        if (IsKeyDown(KEY_UP))
+        {
+            y-=speed;//To move the paddle up
+        }
+        if (IsKeyDown(KEY_DOWN))
+        {
+            y+=speed;//To move the paddle down
+        }
+
+        if(y<=0)
+        {
+            y=0;
+        }
+        if(y+height>=GetScreenHeight())
+        {
+            y=GetScreenHeight()-height;
+        }
+    }
+};
+
+
 Ball ball;
+Paddle player1;
+Paddle player2;
 
 int main() {
     cout<<"Starting the game"<<endl;
@@ -43,18 +77,32 @@ ball.y=screenHeight/2;
 ball.speed_x=7;
 ball.speed_y=7;
 
+player1.width=25;
+player1.height=120;
+player1.x=screenWidth-player1.width-10;
+player1.y=screenHeight/2-player1.height/2;
+player1.speed=6;
+
+player2.width=25;
+player2.height=120;
+player2.x=10;
+player2.y=screenHeight/2-player2.height/2;
+player2.speed=6;
+
 
     while (WindowShouldClose()==false)
     {
         BeginDrawing();
 //upating 
         ball.Move();
+        player1.Move();
+        player2.Move();
 //Drawing
 ClearBackground(BLACK);//To fill the window with black color before drawing anything.. So that the previous frame is not visible
         DrawLine(screenWidth/2, 0, screenWidth/2, screenHeight, WHITE);
         ball.Draw();
-        DrawRectangle(10, screenHeight/2-60, 25, 120, WHITE);//left paddle 10=10(padding) 60=rectangle height
-        DrawRectangle(screenWidth-35, screenHeight/2-60, 25, 120, WHITE);//right paddle 35=10(padding)+25(rectangle width)
+        player1.Draw();
+        player2.Draw();
         EndDrawing();
     }
     
