@@ -1,26 +1,23 @@
 #include "raylib.h"
-
+#include <iostream>
+using namespace std;
 int main() {
-    // Initialization
-    const int screenWidth = 800;
-    const int screenHeight = 450;
+    cout<<"Starting the game"<<endl;
+    const int screenWidth = 1280;
+    const int screenHeight = 800;
+    InitWindow(screenWidth, screenHeight, "Pong Game");
+    SetTargetFPS(60);
 
-    InitWindow(screenWidth, screenHeight, "ProjectName");
-
-    // Main game loop
-    while (!WindowShouldClose()) {
-        // Update
-        // ...
-
-        // Draw
+    while (WindowShouldClose()==false)
+    {
         BeginDrawing();
-        ClearBackground(BLACK);
-        // ...
+
         EndDrawing();
     }
+    
 
-    // De-initialization
+
+
     CloseWindow();
-
     return 0;
 }
