@@ -127,6 +127,17 @@ int main()
         ball.Move();
         player.Move();
         cpu.Move(ball.y);
+
+        //Checking For Collision
+        if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player.x, player.y, player.width, player.height}))
+        {
+            ball.speed_x *= -1;
+        }
+        if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x, cpu.y, cpu.width, cpu.height}))
+        {
+            ball.speed_x *= -1;
+        }
+        
         // Drawing
         ClearBackground(BLACK); // To fill the window with black color before drawing anything.. So that the previous frame is not visible
         DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
