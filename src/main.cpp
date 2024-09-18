@@ -30,12 +30,23 @@ public:
         {
             CpuScore++;
             speed_x *= -1;
+            Reset();
         }
         if(x - radius <= 0)//PlayerWins
         {
             PlayerScore++;
             speed_x *= -1;
+            Reset();
         }
+    }
+
+    void Reset()
+    {
+        x = GetScreenWidth() / 2;
+        y = GetScreenHeight() / 2;
+        int speed_choices[] = {1, -1};
+        speed_x *= speed_choices[GetRandomValue(0, 1)];
+        speed_y *= speed_choices[GetRandomValue(0, 1)];
     }
 };
 
