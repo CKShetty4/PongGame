@@ -112,6 +112,19 @@ public:
 
         LimitMovement();
     }
+    void Move2()
+    {
+        if (IsKeyDown(KEY_W))
+        {
+            y -= speed; // To move the paddle up
+        }
+        if (IsKeyDown(KEY_S))
+        {
+            y += speed; // To move the paddle down
+        }
+
+        LimitMovement();
+    }
 };
 
 class CpuPaddle : public Paddle
@@ -133,8 +146,9 @@ public:
 };
 
 Ball ball;
-Paddle player;
-CpuPaddle cpu;
+Paddle player1;
+Paddle player2;
+// CpuPaddle cpu;
 
 int main()
 {
@@ -150,17 +164,23 @@ int main()
     ball.speed_x = 7;
     ball.speed_y = 7;
 
-    player.width = 25;
-    player.height = 120;
-    player.x = screenWidth - player.width - 15;
-    player.y = screenHeight / 2 - player.height / 2;
-    player.speed = 6;
+    player1.width = 25;
+    player1.height = 120;
+    player1.x = screenWidth - player1.width - 15;
+    player1.y = screenHeight / 2 - player1.height / 2;
+    player1.speed = 6;
 
-    cpu.width = 25;
-    cpu.height = 120;
-    cpu.x = 15;
-    cpu.y = screenHeight / 2 - cpu.height / 2;
-    cpu.speed = 6;
+    // cpu.width = 25;
+    // cpu.height = 120;
+    // cpu.x = 15;
+    // cpu.y = screenHeight / 2 - cpu.height / 2;
+    // cpu.speed = 6;
+
+    player2.width = 25;
+    player2.height = 120;
+    player2.x = 15;
+    player2.y = screenHeight / 2 - player2.height / 2;
+    player2.speed = 6;
 
     bool gameStarted = false;
     float delayTimer = 1.0f; // 1-second delay after pressing space
@@ -200,18 +220,23 @@ int main()
             // Update and draw the game as usual
 
             ball.Move();
-            player.Move();
-            cpu.Move(ball.y);
+            player1.Move();
+            player2.Move2();
+            // cpu.Move(ball.y);
 
             // Checking For Collision
-            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player.x, player.y, player.width, player.height}))
+            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player1.x, player1.y, player1.width, player1.height}))
             {
                 ball.speed_x *= -1;
             }
-            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x, cpu.y, cpu.width, cpu.height}))
+            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player2.x, player2.y, player2.width, player2.height}))
             {
                 ball.speed_x *= -1;
             }
+            // if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x, cpu.y, cpu.width, cpu.height}))
+            // {
+            //     ball.speed_x *= -1;
+            // }
 
             // Drawing
             ClearBackground(DarkGreen); // To fill the window with black color before drawing anything.. So that the previous frame is not visible
@@ -219,8 +244,9 @@ int main()
             DrawCircle(screenWidth / 2, screenHeight / 2, 150, LightGreen);
             DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
             ball.Draw();
-            cpu.Draw();
-            player.Draw();
+            // cpu.Draw();
+            player2.Draw();
+            player1.Draw();
 
             DrawText(TextFormat("%i", CpuScore), screenWidth / 4 - 20, 20, 80, WHITE);
             DrawText(TextFormat("%i", PlayerScore), 3 * screenWidth / 4 - 20, 20, 80, WHITE);
