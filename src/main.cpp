@@ -1,11 +1,13 @@
 #include "raylib.h"
 #include <iostream>
+#include <cmath>
+
 using namespace std;
 
-Color Green= Color{38, 185, 154, 255};//Not using Transparency so alpha is 255
-Color DarkGreen= Color{20, 160, 133, 255};
-Color LightGreen= Color{129, 204, 184, 255};
-Color yellow= Color{243, 213, 91, 255};
+Color Green = Color{38, 185, 154, 255}; // Not using Transparency so alpha is 255
+Color DarkGreen = Color{20, 160, 133, 255};
+Color LightGreen = Color{129, 204, 184, 255};
+Color yellow = Color{243, 213, 91, 255};
 
 int PlayerScore = 0;
 int CpuScore = 0;
@@ -21,30 +23,47 @@ public:
     {
         DrawCircle(x, y, radius, yellow);
     }
-
     void Move()
     {
-        x += speed_x;
-        y += speed_y;
+        static float delayTimer = 0.0f; // 1-second delay after reset
+        static bool resetDone = false;
 
-        if (y + radius >= GetScreenHeight() || y - radius <= 0)
+        if (resetDone)
         {
-            speed_y *= -1;
+            delayTimer -= GetFrameTime();
+            if (delayTimer <= 0.0f)
+            {
+                resetDone = false;
+            }
         }
-        if (x + radius >= GetScreenWidth() )//Computer wins
+        else
         {
-            CpuScore++;
-            speed_x *= -1;
-            Reset();
-        }
-        if(x - radius <= 0)//PlayerWins
-        {
-            PlayerScore++;
-            speed_x *= -1;
-            Reset();
+
+            x += speed_x;
+            y += speed_y;
+
+            if (y + radius >= GetScreenHeight() || y - radius <= 0)
+            {
+                speed_y *= -1;
+            }
+            if (x + radius >= GetScreenWidth()) // Computer wins
+            {
+                CpuScore++;
+                speed_x *= -1;
+                Reset();
+                resetDone = true;
+                delayTimer = 1.0f; // start delay timer
+            }
+            if (x - radius <= 0) // PlayerWins
+            {
+                PlayerScore++;
+                speed_x *= -1;
+                Reset();
+                resetDone = true;
+                delayTimer = 1.0f; // start delay timer
+            }
         }
     }
-
     void Reset()
     {
         x = GetScreenWidth() / 2;
@@ -57,10 +76,10 @@ public:
 
 class Paddle
 {
-    protected:
+protected:
     void LimitMovement()
     {
-         if (y <= 0)
+        if (y <= 0)
         {
             y = 0;
         }
@@ -69,6 +88,7 @@ class Paddle
             y = GetScreenHeight() - height;
         }
     }
+
 public:
     float x, y;
     int speed;
@@ -90,14 +110,13 @@ public:
             y += speed; // To move the paddle down
         }
 
-       LimitMovement();
+        LimitMovement();
     }
 };
 
-
 class CpuPaddle : public Paddle
 {
-    public:
+public:
     void Move(int ball_y)
     {
         if (y + height / 2 < ball_y)
@@ -111,9 +130,7 @@ class CpuPaddle : public Paddle
 
         LimitMovement();
     }
-
 };
-
 
 Ball ball;
 Paddle player;
@@ -145,35 +162,70 @@ int main()
     cpu.y = screenHeight / 2 - cpu.height / 2;
     cpu.speed = 6;
 
+    bool gameStarted = false;
+    float delayTimer = 1.0f; // 1-second delay after pressing space
+    bool spacePressed = false;
+
     while (WindowShouldClose() == false)
     {
         BeginDrawing();
-        // upating
-        ball.Move();
-        player.Move();
-        cpu.Move(ball.y);
-
-        //Checking For Collision
-        if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player.x, player.y, player.width, player.height}))
+        if (!gameStarted)
         {
-            ball.speed_x *= -1;
-        }
-        if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x, cpu.y, cpu.width, cpu.height}))
-        {
-            ball.speed_x *= -1;
-        }
-        
-        // Drawing
-        ClearBackground(DarkGreen); // To fill the window with black color before drawing anything.. So that the previous frame is not visible
-        DrawRectangle(screenWidth / 2, 0, screenWidth/2, screenHeight, Green);
-        DrawCircle(screenWidth / 2, screenHeight / 2, 150, LightGreen);
-        DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
-        ball.Draw();
-        cpu.Draw();
-        player.Draw();
+            ClearBackground(DarkGreen);
 
-        DrawText(TextFormat("%i",CpuScore), screenWidth / 4 - 20, 20, 80, WHITE);
-        DrawText(TextFormat("%i",PlayerScore), 3*screenWidth / 4 - 20, 20, 80, WHITE);
+            // Animation for "Pong Game" text
+
+            DrawText("Pong Game", screenWidth / 2 - 100, screenHeight / 2 - 50, 40, WHITE);
+            float textAlpha = (sin(GetTime() * 2) + 1) / 2; // oscillating alpha value
+            DrawText("Press space to start", screenWidth / 2 - 120, screenHeight / 2 + 20, 30, Fade(WHITE, textAlpha));
+            DrawText("[       Space       ]", screenWidth / 2 - 120, screenHeight / 2 + 50, 30, Fade(WHITE, textAlpha));
+
+            if (IsKeyPressed(KEY_SPACE))
+            {
+                spacePressed = true;
+            }
+
+            if (spacePressed)
+            {
+                delayTimer -= GetFrameTime();
+                if (delayTimer <= 0.0f)
+                {
+                    gameStarted = true;
+                    delayTimer = 0.0f;
+                }
+            }
+        }
+        else
+        {
+            // Update and draw the game as usual
+
+            ball.Move();
+            player.Move();
+            cpu.Move(ball.y);
+
+            // Checking For Collision
+            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{player.x, player.y, player.width, player.height}))
+            {
+                ball.speed_x *= -1;
+            }
+            if (CheckCollisionCircleRec(Vector2{ball.x, ball.y}, ball.radius, Rectangle{cpu.x, cpu.y, cpu.width, cpu.height}))
+            {
+                ball.speed_x *= -1;
+            }
+
+            // Drawing
+            ClearBackground(DarkGreen); // To fill the window with black color before drawing anything.. So that the previous frame is not visible
+            DrawRectangle(screenWidth / 2, 0, screenWidth / 2, screenHeight, Green);
+            DrawCircle(screenWidth / 2, screenHeight / 2, 150, LightGreen);
+            DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
+            ball.Draw();
+            cpu.Draw();
+            player.Draw();
+
+            DrawText(TextFormat("%i", CpuScore), screenWidth / 4 - 20, 20, 80, WHITE);
+            DrawText(TextFormat("%i", PlayerScore), 3 * screenWidth / 4 - 20, 20, 80, WHITE);
+        }
+
         EndDrawing();
     }
 
