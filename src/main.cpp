@@ -2,6 +2,11 @@
 #include <iostream>
 using namespace std;
 
+Color Green= Color{38, 185, 154, 255};//Not using Transparency so alpha is 255
+Color DarkGreen= Color{20, 160, 133, 255};
+Color LightGreen= Color{129, 204, 184, 255};
+Color yellow= Color{243, 213, 91, 255};
+
 int PlayerScore = 0;
 int CpuScore = 0;
 
@@ -14,7 +19,7 @@ public:
 
     void Draw()
     {
-        DrawCircle(x, y, radius, WHITE);
+        DrawCircle(x, y, radius, yellow);
     }
 
     void Move()
@@ -71,7 +76,7 @@ public:
 
     void Draw()
     {
-        DrawRectangle(x, y, width, height, WHITE);
+        DrawRectangleRounded(Rectangle{x, y, width, height}, 0.8, 0, WHITE);
     }
 
     void Move()
@@ -130,13 +135,13 @@ int main()
 
     player.width = 25;
     player.height = 120;
-    player.x = screenWidth - player.width - 10;
+    player.x = screenWidth - player.width - 15;
     player.y = screenHeight / 2 - player.height / 2;
     player.speed = 6;
 
     cpu.width = 25;
     cpu.height = 120;
-    cpu.x = 10;
+    cpu.x = 15;
     cpu.y = screenHeight / 2 - cpu.height / 2;
     cpu.speed = 6;
 
@@ -159,7 +164,9 @@ int main()
         }
         
         // Drawing
-        ClearBackground(BLACK); // To fill the window with black color before drawing anything.. So that the previous frame is not visible
+        ClearBackground(DarkGreen); // To fill the window with black color before drawing anything.. So that the previous frame is not visible
+        DrawRectangle(screenWidth / 2, 0, screenWidth/2, screenHeight, Green);
+        DrawCircle(screenWidth / 2, screenHeight / 2, 150, LightGreen);
         DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
         ball.Draw();
         cpu.Draw();
