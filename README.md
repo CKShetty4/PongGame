@@ -27,7 +27,7 @@ Welcome to my Pong Game! This project is developed using C++ with the Raylib lib
 
 ## Deployment
 
-The game will also be available online via **GitHub Pages**, compiled into WebAssembly for web-based gameplay. You will be able to access the game directly in your browser through this [link](https://ckshetty4.github.io/PongGameDeploy/), which will be added upon deployment.
+The game will also be available online via **GitHub Pages**, compiled into WebAssembly for web-based gameplay. You will be able to access the game directly in your browser through this [link](https://ckshetty4.github.io/PongGameDeploy/).
 
 ## Screenshots
 
