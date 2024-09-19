@@ -5,7 +5,7 @@
 
 using namespace std;
 
-Color Green = Color{38, 185, 154, 255}; 
+Color Green = Color{38, 185, 154, 255};
 Color DarkGreen = Color{20, 160, 133, 255};
 Color LightGreen = Color{129, 204, 184, 255};
 Color yellow = Color{243, 213, 91, 255};
@@ -55,7 +55,7 @@ public:
                 speed_x *= -1;
                 Reset();
                 resetDone = true;
-                delayTimer = 1.0f; 
+                delayTimer = 1.0f;
             }
             if (x - radius <= 0) // PlayerWins
             {
@@ -63,7 +63,7 @@ public:
                 speed_x *= -1;
                 Reset();
                 resetDone = true;
-                delayTimer = 1.0f; 
+                delayTimer = 1.0f;
             }
         }
     }
@@ -106,11 +106,11 @@ public:
     {
         if (IsKeyDown(KEY_UP))
         {
-            y -= speed; 
+            y -= speed;
         }
         if (IsKeyDown(KEY_DOWN))
         {
-            y += speed; 
+            y += speed;
         }
 
         LimitMovement();
@@ -119,11 +119,11 @@ public:
     {
         if (IsKeyDown(KEY_W))
         {
-            y -= speed; 
+            y -= speed;
         }
         if (IsKeyDown(KEY_S))
         {
-            y += speed; 
+            y += speed;
         }
 
         LimitMovement();
@@ -178,21 +178,20 @@ int main()
     player2.x = 15;
     player2.y = screenHeight / 2 - player2.height / 2;
     player2.speed = 6;
-    
+
     cpu.width = 25;
     cpu.height = 120;
     cpu.x = 15;
     cpu.y = screenHeight / 2 - cpu.height / 2;
     cpu.speed = 6;
 
-
     bool gameStarted = false;
-    bool showMenu = true; 
-    float delayTimer = 1.0f; 
+    bool showMenu = true;
+    float delayTimer = 1.0f;
     bool spacePressed = false;
-    bool cpuGame = false; 
-    bool paused = false; 
-    bool showLeaderboard = false; 
+    bool cpuGame = false;
+    bool paused = false;
+    bool showLeaderboard = false;
 
     // Load highest score from file
     ifstream file("highest_score.txt");
@@ -211,13 +210,13 @@ int main()
 
     // Main game loop
     while (WindowShouldClose() == false)
-    { 
+    {
         BeginDrawing();
         if (showMenu)
         {
             ClearBackground(DarkGreen);
-            PlayerScore=0;
-            CpuScore=0;
+            PlayerScore = 0;
+            CpuScore = 0;
             ball.Reset();
             DrawText("Pong Game", screenWidth / 2 - 100, screenHeight / 2 - 100, 40, WHITE);
             DrawText("Select game mode:", screenWidth / 2 - 120, screenHeight / 2 - 60, 30, WHITE);
@@ -249,7 +248,7 @@ int main()
 
             DrawText("Leaderboard", screenWidth / 2 - 100, screenHeight / 2 - 100, 40, WHITE);
             DrawText(("Highest Score: " + to_string(highestScore)).c_str(), screenWidth / 2 - 120, screenHeight / 2 - 20, 30, WHITE);
-DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, screenHeight / 2 + 20, 30, WHITE);
+            DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, screenHeight / 2 + 20, 30, WHITE);
             DrawText("Press space to go back to main menu", screenWidth / 2 - 120, screenHeight / 2 + 60, 30, WHITE);
 
             if (IsKeyPressed(KEY_SPACE))
@@ -265,7 +264,7 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
             DrawText("Pong Game", screenWidth / 2 - 100, screenHeight / 2 - 50, 40, WHITE);
             float textAlpha = (sin(GetTime() * 2) + 1) / 2; // oscillating alpha value
             DrawText("Press space to start", screenWidth / 2 - 120, screenHeight / 2 + 20, 30, Fade(WHITE, textAlpha));
-            DrawText("[       Space       ]", screenWidth / 2 -  120, screenHeight / 2 + 50, 30, Fade(WHITE, textAlpha));
+            DrawText("[       Space       ]", screenWidth / 2 - 120, screenHeight / 2 + 50, 30, Fade(WHITE, textAlpha));
 
             if (IsKeyPressed(KEY_SPACE))
             {
@@ -292,7 +291,7 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
             if (paused)
             {
                 DrawRectangle(screenWidth / 2 - 150, screenHeight / 2 - 100, 300, 200, Fade(WHITE, 0.5));
-                float textAlpha = (sin(GetTime() * 2) + 1) / 2; 
+                float textAlpha = (sin(GetTime() * 2) + 1) / 2;
                 DrawText("Game Paused", screenWidth / 2 - 120, screenHeight / 2 - 60, 40, Fade(BLACK, textAlpha));
                 DrawText("[R]  Resume", screenWidth / 2 - 40, screenHeight / 2 - 20, 30, BLACK);
                 DrawText("[M]  Menu", screenWidth / 2 - 40, screenHeight / 2 + 20, 30, BLACK);
@@ -353,7 +352,7 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
                         file << highestScore;
                         file.close();
                     }
-                    //update last score
+                    // update last score
                     if (PlayerScore > lastScore)
                     {
                         lastScore = PlayerScore;
@@ -387,7 +386,7 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
                     }
 
                     // Drawing
-                    ClearBackground(DarkGreen); 
+                    ClearBackground(DarkGreen);
                     DrawRectangle(screenWidth / 2, 0, screenWidth / 2, screenHeight, Green);
                     DrawCircle(screenWidth / 2, screenHeight / 2, 150, LightGreen);
                     DrawLine(screenWidth / 2, 0, screenWidth / 2, screenHeight, WHITE);
@@ -407,7 +406,7 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
                         file.close();
                     }
 
-                    //update last score
+                    // update last score
                     if (PlayerScore > lastScore)
                     {
                         lastScore = PlayerScore;
@@ -422,7 +421,6 @@ DrawText(("Last Best: " + to_string(lastScore)).c_str(), screenWidth / 2 - 120, 
                         file2 << lastScore;
                         file2.close();
                     }
-                    
                 }
             }
         }
